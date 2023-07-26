@@ -36,13 +36,13 @@ class VendingMachineChangeTrackerControllerTest {
 
     @Test
     void testInitializeVendingMachine() {
-        List<Coin> coinDenominations = Arrays.asList(
+        List<Coin> coins = Arrays.asList(
                 new Coin(1),
                 new Coin(2),
                 new Coin(5)
         );
 
-        ResponseEntity response = vendingMachineChangeTrackerController.initializeVendingMachine(coinDenominations);
+        ResponseEntity response = vendingMachineChangeTrackerController.initializeVendingMachine(coins);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Vending Machine Initialised successfully", response.getBody());

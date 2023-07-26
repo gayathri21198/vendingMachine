@@ -17,9 +17,9 @@ import java.util.List;
 public class VendingMachineChangeTrackerServiceImpl implements VendingMachineChangeTrackerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(VendingMachineChangeTrackerServiceImpl.class);
     private VendingMachineChangeTracker vendingMachineChangeTracker;
-    public void initializeVendingMachine(List<Coin> coinDenominations) {
+    public void initializeVendingMachine(List<Coin> coins) {
         LOGGER.info("VendingMachineChangeTrackerServiceImpl - initializeVendingMachine method invoked");
-        vendingMachineChangeTracker = new VendingMachineChangeTracker(coinDenominations);
+        vendingMachineChangeTracker = new VendingMachineChangeTracker(coins);
     }
 
     public void registerCoins(List<Coin> coins) {

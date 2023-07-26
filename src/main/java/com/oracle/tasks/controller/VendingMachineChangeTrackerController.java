@@ -25,9 +25,9 @@ public class VendingMachineChangeTrackerController {
     private VendingMachineChangeTrackerService vendingMachineChangeTrackerService;
 
     @PostMapping("/api/v1/vending-machine/initialize")
-    public ResponseEntity initializeVendingMachine(@RequestBody List<Coin> coinDenominations) {
+    public ResponseEntity initializeVendingMachine(@RequestBody List<Coin> coins) {
         LOGGER.info("VendingMachineChangeTrackerController - initializeVendingMachine method invoked");
-        vendingMachineChangeTrackerService.initializeVendingMachine(coinDenominations);
+        vendingMachineChangeTrackerService.initializeVendingMachine(coins);
         return ResponseEntity.status(HttpStatus.OK).body("Vending Machine Initialised successfully");
     }
 

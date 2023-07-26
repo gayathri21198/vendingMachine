@@ -39,18 +39,18 @@ public class VendingMachineChangeTrackerCommandLineTestHarness
 
             switch (choice) {
                 case 1:
-                    System.out.println("Enter the coin denominations available separated by spaces: (eg:1 2 5)");
-                    String coinDenominationsInput = scanner.nextLine();
-                    List<String> coinDenominationsValues = Arrays.asList(coinDenominationsInput.split(" "));
-                    List<Coin> coinDenominations = parseCoinValues(coinDenominationsValues);
-                    ResponseEntity<String> initResponse = restTemplate.postForEntity(BASE_URL + "initialize", coinDenominations, String.class);
+                    System.out.println("Enter the coins available separated by spaces: (eg:1 2 5)");
+                    String coinsInput = scanner.nextLine();
+                    List<String> coinsValues = Arrays.asList(coinsInput.split(" "));
+                    List<Coin> coins = parseCoinValues(coinsValues);
+                    ResponseEntity<String> initResponse = restTemplate.postForEntity(BASE_URL + "initialize", coins, String.class);
                     System.out.println(initResponse.getBody());
                     break;
                 case 2:
                     System.out.println("Enter the coin values deposited by the user separated by spaces: (eg:2 2 2 5 5)");
-                    String coinsInput = scanner.nextLine();
+                    coinsInput = scanner.nextLine();
                     List<String> coinValues = Arrays.asList(coinsInput.split(" "));
-                    List<Coin> coins = parseCoinValues(coinValues);
+                    coins = parseCoinValues(coinValues);
                     ResponseEntity<String> registerResponse = restTemplate.postForEntity(BASE_URL + "register-coins", coins, String.class);
                     System.out.println(registerResponse.getBody());
                     break;

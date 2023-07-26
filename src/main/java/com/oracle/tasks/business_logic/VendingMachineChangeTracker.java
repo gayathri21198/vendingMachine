@@ -13,41 +13,43 @@ import java.util.stream.Collectors;
  */
 public class VendingMachineChangeTracker {
     private static final Logger LOGGER = LoggerFactory.getLogger(VendingMachineChangeTracker.class);
-    private final List<Coin> coinDenominations;
     private List<Coin> coinPool;
 
     public List<Coin> getCoinPool() {
-        return coinPool;
+        return null == coinPool ? new ArrayList<>() : coinPool;
     }
 
-    public VendingMachineChangeTracker(List<Coin> coinDenominations) {
+    public VendingMachineChangeTracker(List<Coin> coinPool) {
         LOGGER.info("VendingMachineChangeTracker - VendingMachineChangeTracker Constructor called");
-        this.coinDenominations = coinDenominations;
-        this.coinPool = new ArrayList<>();
-        log(coinDenominations, coinPool);
+        this.coinPool = coinPool;
+        LOGGER.info("Coin Pool After Initialization "+getCoinPool());
     }
 
     public void registerCoins(List<Coin> coins) {
         LOGGER.info("VendingMachineChangeTracker - registerCoins method invoked");
-        this.coinPool = coins;
-        LOGGER.info("Coin Pool "+coinPool);
+        // this.coinPool.addAll(coins); // throws Unsupported Operation Exception and hence converting the Coins into Integer & appending the newly registered coins with the Existing Coin Pool
+        List<Integer> coinPoolValues = this.coinPool.stream().mapToInt(Coin::getValue).boxed().collect(Collectors.toList());
+        List<Integer> registeredCoinValues = coins.stream().mapToInt(Coin::getValue).boxed().collect(Collectors.toList());
+        coinPoolValues.addAll(registeredCoinValues);
+        this.coinPool = parseCoinValues(coinPoolValues);
+        LOGGER.info("Coin Pool after registration "+coinPool);
     }
 
     public List<Coin> getChange(int orderValue) throws ExactChangeNotAvailableException {
         LOGGER.info("VendingMachineChangeTracker - getChange method invoked");
         LOGGER.info("Order Value is "+orderValue);
-        log(coinDenominations, coinPool);
-        int[] coins = coinPool.stream().mapToInt(i -> i.getValue()).toArray();
+        LOGGER.info("Coin Pool "+coinPool);
+        int[] coins = coinPool.stream().mapToInt(Coin::getValue).toArray();
         List<Integer> coinsMakingUpOrderValue = getMinimumCoinsList(coins, orderValue);
         LOGGER.info("Coins Making-Up the Order Value "+coinsMakingUpOrderValue);
         // update the coin pool to remove the served order
-        List<Integer> difference = coinPool.stream().mapToInt(i -> i.getValue()).boxed().collect(Collectors.toList());
+        List<Integer> difference = coinPool.stream().mapToInt(Coin::getValue).boxed().collect(Collectors.toList());
 
         for (Integer coinValue : coinsMakingUpOrderValue) {
             difference.remove(coinValue);
         }
         coinPool = parseCoinValues(difference);
-        log(coinDenominations, coinPool);
+        LOGGER.info("Coin Pool "+coinPool);
         return parseCoinValues(coinsMakingUpOrderValue);
     }
 
@@ -81,12 +83,6 @@ public class VendingMachineChangeTracker {
     }
 
     private static List<Coin> parseCoinValues(List<Integer> coinValues) {
-        List<Coin> coins = coinValues.stream().map(Coin::new).collect(Collectors.toList());
-        return coins;
-    }
-
-    private static void log(List<Coin> coinDenominations, List<Coin> coinPool) {
-        LOGGER.info("Coin Denominations "+coinDenominations);
-        LOGGER.info("Coin Pool "+coinPool);
+        return coinValues.stream().map(Coin::new).collect(Collectors.toList());
     }
 }

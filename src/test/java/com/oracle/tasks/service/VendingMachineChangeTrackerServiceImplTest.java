@@ -32,17 +32,17 @@ class VendingMachineChangeTrackerServiceImplTest {
 
     @Test
     void testInitializeVendingMachine() {
-        List<Coin> coinDenominations = Arrays.asList(
+        List<Coin> coins = Arrays.asList(
                 new Coin(1),
                 new Coin(2),
                 new Coin(5)
         );
 
-        vendingMachineChangeTrackerService.initializeVendingMachine(coinDenominations);
+        vendingMachineChangeTrackerService.initializeVendingMachine(coins);
 
-        // Verify that the initializeVendingMachine method is called once with the correct coinDenominations
+        // Verify that the initializeVendingMachine method is called once with the correct coins
         // This also indirectly verifies that vendingMachineChangeTracker is initialized correctly
-        // with the provided coinDenominations
+        // with the provided coins
         assertNotNull(vendingMachineChangeTracker);
     }
 
