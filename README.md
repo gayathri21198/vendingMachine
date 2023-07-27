@@ -1,9 +1,6 @@
 # Vending Machine Change Tracker Spring Boot Application
 
-## Test-Harness Class
-The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in the path ```com/oracle/tasks/test_harness/VendingMachineChangeTrackerCommandLineTestHarness.java```
-
-## Assumption
+## Assumptions
 
 The following are the assumptions made while implementing the Vending Machine Application to track change
 
@@ -11,12 +8,128 @@ The following are the assumptions made while implementing the Vending Machine Ap
 	2. Register coins that have been deposited by a user - add the input list of coins to the Coin Pool
 	3. Return the correct change to a user as coins when an order is received and remove the coins from the machine - Removes the coins that make up the Order Value from the Coin Pool or throws the custom Exception
 
+## Test-Harness Class
+The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in the path ```com/oracle/tasks/test_harness/VendingMachineChangeTrackerCommandLineTestHarness.java```
+
+## Steps to execute Test-Harness Class
+
+1. Launch the Vending Machine Application
+
+   1.1 Do a clean build in gradle that generates an application jar in the Project root path (vendingMachine/build/libs/)
+   
+   1.2 Copy the absolute path of the generated jar
+
+   1.3 run the following command in the terminal - java -jar absolutePath
+
+2. Once the application is started, execute the VendingMachineChangeTrackerTestHarnessClass for various scenarios 
+
+       Test-Harness Class Output:
+
+          Welcome to Vending Machine Test Runner!
+          Please verify whether the Vending Machine SpringBoot Application is up and running before choosing any of the following options.!
+          Enter '1' to initialize vending machine
+          Enter '2' to register coins
+          Enter '3' to get change
+          Enter '0' to exit
+          Enter your choice: 
+
+3. Scenario 1: Initialize the VendingMachine
+
+     3.1 Vending machine is initialized with the coins entered by the user
+
+            Application Logger Info:
+
+            2023-07-27 11:23:03.841  INFO 27724 --- [nio-8080-exec-1] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - initializeVendingMachine method invoked
+            2023-07-27 11:23:03.842  INFO 27724 --- [nio-8080-exec-1] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - initializeVendingMachine method invoked
+            2023-07-27 11:23:03.842  INFO 27724 --- [nio-8080-exec-1] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - VendingMachineChangeTracker Constructor called
+            2023-07-27 11:23:03.842  INFO 27724 --- [nio-8080-exec-1] c.o.t.b.VendingMachineChangeTracker      : Coin Pool After Initialization [Coin{value=1}, Coin{value=1}, Coin{value=2}, Coin{value=2}, Coin{value=5}, Coin{value=5}, Coin{value=10}]
+
+            Test-Harness Class Output:
+
+            Enter the coins available separated by spaces: (eg:1 2 5) 1 1 2 2 5 5 10
+            11:23:03.603 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/initialize
+            11:23:03.613 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+            11:23:03.627 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [[Coin{value=1}, Coin{value=1}, Coin{value=2}, Coin{value=2}, Coin{value=5}, Coin{value=5}, Coin{value=10}]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+            11:23:03.868 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+            11:23:03.870 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "text/plain;charset=UTF-8"
+            Vending Machine Initialised successfully
+
+4. Scenario 2: Register the coins deposited by the user
+        
+     4.1 The coins entered by the user is updated in the coin pool
+             
+            Application Logger Info:
+            
+            2023-07-27 11:23:30.811  INFO 27724 --- [nio-8080-exec-2] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - registerCoins method invoked
+            2023-07-27 11:23:30.812  INFO 27724 --- [nio-8080-exec-2] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - registerCoins method invoked
+            2023-07-27 11:23:30.812  INFO 27724 --- [nio-8080-exec-2] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - registerCoins method invoked
+            2023-07-27 11:23:30.820  INFO 27724 --- [nio-8080-exec-2] c.o.t.b.VendingMachineChangeTracker      : Coin Pool after registration [Coin{value=1}, Coin{value=1}, Coin{value=2}, Coin{value=2}, Coin{value=5}, Coin{value=5}, Coin{value=10}, Coin{value=5}, Coin{value=10}]
+
+            Test-Harness Class Output:
+
+            Enter your choice: 2
+            Enter the coin values deposited by the user separated by spaces: (eg:2 2 2 5 5) 5 10
+            11:23:30.790 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/register-coins
+            11:23:30.791 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+            11:23:30.791 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [[Coin{value=5}, Coin{value=10}]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+            11:23:30.828 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+            11:23:30.829 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "text/plain;charset=UTF-8"
+            Vending Machine Coins Registered successfully
+
+5. Scenario 3: User needs to specify the product value
+        
+      5.1 Scenario 1: **Happy Path/Positive case** - User gives a product value in such a way that the change is returned by the vending machine eg: 15
+ 
+      5.1.1 Change coins returned to the user with an HTTP response code 200 and the value of the coins is reduced in the coin pool 
+
+             Application Logger Info:
+             
+             2023-07-27 11:24:24.328  INFO 27724 --- [nio-8080-exec-3] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - getChange method invoked
+             2023-07-27 11:24:24.329  INFO 27724 --- [nio-8080-exec-3] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - getChange method invoked
+             2023-07-27 11:24:24.329  INFO 27724 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - getChange method invoVendingMachine method invoked
+             2023-07-27 11:26:15.365  INFO 27724 --- [nio-8080-exec-6] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - VendingMachineChangeTracker Constructor called
+
+             Test-Harness Class Output:
+
+             Enter the order value: (eg:10)15
+             13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/get-change
+             13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+             13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [15] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+             13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+             13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+             Change coins: [{"value":1},{"value":2},{"value":2},{"value":5},{"value":5}]
+
+      5.2 Scenario 2: **Exception case** - User gives a product value in such a way that the vending machine cannot return the change
+      
+      5.2.1 Exception with the message **Exact Change Not Available** is thrown by the vending machine with an HTTP response code of 400
+
+            Application Logger info:
+
+            2023-07-27 13:24:24.098  INFO 8436 --- [nio-8080-exec-3] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - getChange method invoked
+            2023-07-27 13:24:24.098  INFO 8436 --- [nio-8080-exec-3] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - getChange method invoked
+            2023-07-27 13:24:24.098  INFO 8436 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - getChange method invoked
+            2023-07-27 13:24:24.098  INFO 8436 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Order Value is 69
+            2023-07-27 13:24:24.098  INFO 8436 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Coin Pool [Coin{value=1}, Coin{value=1}, Coin{value=2}, Coin{value=2}, Coin{value=5}, Coin{value=5}, Coin{value=10}, Coin{value=5}, Coin{value=10}]
+            2023-07-27 13:24:24.106 ERROR 8436 --- [nio-8080-exec-3] endingMachineApplicationExceptionHandler : Exact Change Not Available Exception
+
+            Test-Harness Class Output:
+
+            Enter the order value: (eg:10)15
+            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/get-change
+            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [15] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+            13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+            13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
+            Change coins: [{"value":1},{"value":2},{"value":2},{"value":5},{"value":5}]
+
+6. Exit the VendingMachine Application by entering choice '0'
+
 ## API Endpoints
 The application provides support for the ```Swagger``` feature to view all the available API-Endpoints and its local Url is ```http://localhost:8080/swagger-ui.html#/``` (See application.properties for the <Port Number>)
 
 The Vending Machine Change Tracker Application has the following API Endpoints:
 
-```python
+```python```
 POST /api/v1/vending-machine/initialize: Initialize the vending machine to a known state with the initial float.
 POST /api/v1/vending-machine/register-coins: Register coins deposited by the user.
 POST /api/v1/vending-machine/get-change: Return the correct change to the user when an order is received.
