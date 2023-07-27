@@ -84,10 +84,13 @@ The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in
 
              Application Logger Info:
              
-             2023-07-27 11:24:24.328  INFO 27724 --- [nio-8080-exec-3] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - getChange method invoked
-             2023-07-27 11:24:24.329  INFO 27724 --- [nio-8080-exec-3] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - getChange method invoked
-             2023-07-27 11:24:24.329  INFO 27724 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - getChange method invoVendingMachine method invoked
-             2023-07-27 11:26:15.365  INFO 27724 --- [nio-8080-exec-6] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - VendingMachineChangeTracker Constructor called
+             2023-07-27 14:05:56.735  INFO 10432 --- [nio-8080-exec-3] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - getChange method invoked
+             2023-07-27 14:05:56.735  INFO 10432 --- [nio-8080-exec-3] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - getChange method invoked
+             2023-07-27 14:05:56.735  INFO 10432 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - getChange method invoked
+             2023-07-27 14:05:56.735  INFO 10432 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Order Value is 15
+             2023-07-27 14:05:56.735  INFO 10432 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Coin Pool [Coin{value=1}, Coin{value=1}, Coin{value=2}, Coin{value=2}, Coin{value=5}, Coin{value=5}, Coin{value=10}, Coin{value=5}, Coin{value=10}]
+             2023-07-27 14:05:56.736  INFO 10432 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Coins Making-Up the Order Value [1, 2, 2, 5, 5]
+             2023-07-27 14:05:56.737  INFO 10432 --- [nio-8080-exec-3] c.o.t.b.VendingMachineChangeTracker      : Coin Pool [Coin{value=1}, Coin{value=10}, Coin{value=5}, Coin{value=10}]
 
              Test-Harness Class Output:
 
@@ -114,15 +117,37 @@ The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in
 
             Test-Harness Class Output:
 
-            Enter the order value: (eg:10)15
-            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/get-change
-            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
-            13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [15] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
-            13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
-            13:25:32.775 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "application/json"
-            Change coins: [{"value":1},{"value":2},{"value":2},{"value":5},{"value":5}]
+            Enter your choice: 3
+            Enter the order value: (eg:10)67
+            14:08:04.869 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/get-change
+            14:08:04.870 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+            14:08:04.870 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [67] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+            14:08:04.888 [main] DEBUG org.springframework.web.client.RestTemplate - Response 400 BAD_REQUEST
 
-6. Exit the VendingMachine Application by entering choice '0'
+6. Scenario 4: Reinitialize the vending machine with new coins
+    
+     6.1 The coin pool gets initialized to a new state with the coins entered by the user
+
+         Application Logger Info:
+
+         2023-07-27 14:10:49.437  INFO 10432 --- [nio-8080-exec-6] .c.VendingMachineChangeTrackerController : VendingMachineChangeTrackerController - initializeVendingMachine method invoked
+         2023-07-27 14:10:49.437  INFO 10432 --- [nio-8080-exec-6] s.VendingMachineChangeTrackerServiceImpl : VendingMachineChangeTrackerServiceImpl - initializeVendingMachine method invoked
+         2023-07-27 14:10:49.437  INFO 10432 --- [nio-8080-exec-6] c.o.t.b.VendingMachineChangeTracker      : VendingMachineChangeTracker - VendingMachineChangeTracker Constructor called
+         2023-07-27 14:10:49.438  INFO 10432 --- [nio-8080-exec-6] c.o.t.b.VendingMachineChangeTracker      : Coin Pool After Initialization [Coin{value=6}, Coin{value=7}, Coin{value=3}]
+
+
+         Test-Harness Class output:
+
+         Enter your choice: 1
+         Enter the coins available separated by spaces: (eg:1 2 5) 6 7 3
+         14:10:49.428 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/initialize
+         14:10:49.429 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
+         14:10:49.429 [main] DEBUG org.springframework.web.client.RestTemplate - Writing [[Coin{value=6}, Coin{value=7}, Coin{value=3}]] with org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+         14:10:49.440 [main] DEBUG org.springframework.web.client.RestTemplate - Response 200 OK
+         14:10:49.441 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "text/plain;charset=UTF-8"
+         Vending Machine Initialised successfully
+
+7. Exit the Vending Machine Application by entering the choice '0'.
 
 ## API Endpoints
 The application provides support for the ```Swagger``` feature to view all the available API-Endpoints and its local Url is ```http://localhost:8080/swagger-ui.html#/``` (See application.properties for the <Port Number>)
