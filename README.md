@@ -11,15 +11,15 @@ The following are the assumptions made while implementing the Vending Machine Ap
 ## Test-Harness Class
 The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in the path ```com/oracle/tasks/test_harness/VendingMachineChangeTrackerCommandLineTestHarness.java```
 
-## Steps to execute Test-Harness Class
+## Steps to execute the Test-Harness Class
 
 1. Launch the Vending Machine Application
 
-   1.1 Do a clean build in gradle that generates an application jar in the Project root path (vendingMachine/build/libs/)
+   1.1 Do a clean and build in gradle that generates an application jar in the Project root path ```vendingMachine/build/libs/```
    
-   1.2 Copy the absolute path of the generated jar
+   1.2 Copy the absolute path of the generated jar ```vendingMachine-0.0.1-SNAPSHOT.jar```
 
-   1.3 run the following command in the terminal - java -jar absolutePath
+   1.3 Run the following command in the terminal ```java -jar absolutePath```
 
 2. Once the application is started, execute the VendingMachineChangeTrackerTestHarnessClass for various scenarios 
 
@@ -46,6 +46,7 @@ The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in
 
             Test-Harness Class Output:
 
+            Enter your choice: 1
             Enter the coins available separated by spaces: (eg:1 2 5) 1 1 2 2 5 5 10
             11:23:03.603 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/initialize
             11:23:03.613 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
@@ -94,6 +95,7 @@ The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in
 
              Test-Harness Class Output:
 
+             Enter your choice: 3
              Enter the order value: (eg:10)15
              13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - HTTP POST http://localhost:8080/api/v1/vending-machine/get-change
              13:25:32.741 [main] DEBUG org.springframework.web.client.RestTemplate - Accept=[text/plain, application/json, application/*+json, */*]
@@ -147,42 +149,40 @@ The ```Test-Harness class``` (REPL a.k.a Read-Evaluate-Print-Loop) is present in
          14:10:49.441 [main] DEBUG org.springframework.web.client.RestTemplate - Reading to [java.lang.String] as "text/plain;charset=UTF-8"
          Vending Machine Initialised successfully
 
-7. Exit the Vending Machine Application by entering the choice '0'.
+7. Exit the Vending Machine Application by entering the choice 0.
 
 ## API Endpoints
-The application provides support for the ```Swagger``` feature to view all the available API-Endpoints and its local Url is ```http://localhost:8080/swagger-ui.html#/``` (See application.properties for the <Port Number>)
+The application provides support for the ```Swagger``` feature to view all the available API-Endpoints and its local Url is ```http://localhost:8080/swagger-ui.html#/``` (See application.properties for the Port Number)
 
 The Vending Machine Change Tracker Application has the following API Endpoints:
 
-```python```
-POST /api/v1/vending-machine/initialize: Initialize the vending machine to a known state with the initial float.
-POST /api/v1/vending-machine/register-coins: Register coins deposited by the user.
-POST /api/v1/vending-machine/get-change: Return the correct change to the user when an order is received.
-GET /api/v1/vending-machine: Return the API version
-```
+
+     1. POST /api/v1/vending-machine/initialize: Initialize the vending machine to a known state with the initial float.
+     2. POST /api/v1/vending-machine/register-coins: Register coins deposited by the user.
+     3. POST /api/v1/vending-machine/get-change: Return the correct change to the user when an order is received.
+     4. GET /api/v1/vending-machine: Return the API version
+
 ## Project Modules
-The ```Controller``` contains the API-Endpoints that invoke the ```Service Layer``` which in turn invokes the ```Business-Logic classes``` (instead of the Data Layer as there is no need for a persistence layer for this problem). The ```project structure``` has been added at the end of the file.
+     
+   The Controller contains the API-Endpoints that invoke the Service Layer which in turn invokes the Business-Logic classes (instead of the Data Layer as there is no need for a persistence layer for this problem). The project structure has been added at the end of the file.
 
 ## System-Reliability
 
-## 1) Fault-Tolerance
-The ```Advice``` module hosts the ```interceptor``` along with handling the custom exception and prevents the application from crashing
+        1) Error Handling & Resiliency
+           The Advice module hosts the interceptor along with handling the custom exception and prevents the application from crashing
 
-## 2) Security
-The ```Identity & Access Management``` of the APIs (Authentication and Authorization) of the end-points could be added using ```Spring Security filters``` or other mechanisms such using OAuth or other mechanisms
+        2) Security
+           The Identity & Access Management of the APIs (Authentication and Authorization) of the end-points could be added using Spring Security filters or other mechanisms such using OAuth or other mechanisms
+
+        3) Logging
+           Logging statements have been added to track the application flow at the required places
+
+        4) System Health and other useful info using Actuator
+           The Actuator dependency has been added to get the System-Reliability Information like the health, metrics, info, dump, env, etc and proves as an effective & powerful tool when debugging the production issues
+           Local Host Actuator Endpoint - http://localhost:8080/actuator/health returns whether the application is Up & Running
 
 
-### 3) Logging
-```Logging``` statements have been added to ```track the application flow``` at the required places
-
-### 4) System Health and other useful info using ```Actuator```
-The ```Actuator``` dependency has been added to get the ```System-Reliability``` Information like the health, metrics, info, dump, env, etc and proves as an effective & powerful tool when debugging the production issues
-
-```python
-Local Host Actuator Endpoint - http://localhost:8080/actuator/health returns whether the application is Up & Running
-```
-
-### 5) Java Docs
+## Java Docs
 The Java Docs have been added at the class level
 
 
